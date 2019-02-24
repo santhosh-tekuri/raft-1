@@ -658,27 +658,34 @@ func (r *Raft) verifyLeader(v *verifyFuture) {
 // contact. This must only be called from the main thread.
 func (r *Raft) checkLeaderLease() time.Duration {
 	// Track contacted nodes, we can always contact ourself
-	contacted := 1
+	contacted := 0
 
 	// Check each follower
 	var maxDiff time.Duration
 	now := time.Now()
-	for peer, f := range r.leaderState.replState {
-		diff := now.Sub(f.LastContact())
-		if diff <= r.conf.LeaderLeaseTimeout {
-			contacted++
-			if diff > maxDiff {
-				maxDiff = diff
+	for _, server := range r.configurations.latest.Servers {
+		if server.Suffrage == Voter {
+			if server.ID == r.localID {
+				contacted++
+				continue
 			}
-		} else {
-			// Log at least once at high value, then debug. Otherwise it gets very verbose.
-			if diff <= 3*r.conf.LeaderLeaseTimeout {
-				r.logger.Printf("[WARN] raft: Failed to contact %v in %v", peer, diff)
+			f := r.leaderState.replState[server.ID]
+			diff := now.Sub(f.LastContact())
+			if diff <= r.conf.LeaderLeaseTimeout {
+				contacted++
+				if diff > maxDiff {
+					maxDiff = diff
+				}
 			} else {
-				r.logger.Printf("[DEBUG] raft: Failed to contact %v in %v", peer, diff)
+				// Log at least once at high value, then debug. Otherwise it gets very verbose.
+				if diff <= 3*r.conf.LeaderLeaseTimeout {
+					r.logger.Printf("[WARN] raft: Failed to contact %v in %v", server.ID, diff)
+				} else {
+					r.logger.Printf("[DEBUG] raft: Failed to contact %v in %v", server.ID, diff)
+				}
 			}
+			metrics.AddSample([]string{"raft", "leader", "lastContact"}, float32(diff/time.Millisecond))
 		}
-		metrics.AddSample([]string{"raft", "leader", "lastContact"}, float32(diff/time.Millisecond))
 	}
 
 	// Verify we can contact a quorum

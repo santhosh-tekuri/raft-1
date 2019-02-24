@@ -703,7 +703,7 @@ func TestRaft_AfterShutdown(t *testing.T) {
 
 }
 
-func TestRaft_LiveBootstrap(t *testing.T) {
+func TestRaft_DONE_LiveBootstrap(t *testing.T) {
 	// Make the cluster.
 	c := MakeClusterNoBootstrap(3, t, nil)
 	defer c.Close()
@@ -894,7 +894,7 @@ func TestRaft_HasExistingState(t *testing.T) {
 	}
 }
 
-func TestRaft_SingleNode(t *testing.T) {
+func TestRaft_DONE_SingleNode(t *testing.T) {
 	conf := inmemConfig(t)
 	c := MakeCluster(1, t, conf)
 	defer c.Close()
@@ -937,7 +937,7 @@ func TestRaft_SingleNode(t *testing.T) {
 	}
 }
 
-func TestRaft_TripleNode(t *testing.T) {
+func TestRaft_DONE_TripleNode(t *testing.T) {
 	// Make the cluster
 	c := MakeCluster(3, t, nil)
 	defer c.Close()
@@ -955,7 +955,7 @@ func TestRaft_TripleNode(t *testing.T) {
 	c.WaitForReplication(1)
 }
 
-func TestRaft_LeaderFail(t *testing.T) {
+func TestRaft_DONE_LeaderFail(t *testing.T) {
 	// Make the cluster
 	c := MakeCluster(3, t, nil)
 	defer c.Close()
@@ -1034,7 +1034,7 @@ func TestRaft_LeaderFail(t *testing.T) {
 	}
 }
 
-func TestRaft_BehindFollower(t *testing.T) {
+func TestRaft_DONE_BehindFollower(t *testing.T) {
 	// Make the cluster
 	c := MakeCluster(3, t, nil)
 	defer c.Close()
@@ -1074,7 +1074,7 @@ func TestRaft_BehindFollower(t *testing.T) {
 	c.EnsureLeader(t, leader.localAddr)
 }
 
-func TestRaft_ApplyNonLeader(t *testing.T) {
+func TestRaft_DONE_ApplyNonLeader(t *testing.T) {
 	// Make the cluster
 	c := MakeCluster(3, t, nil)
 	defer c.Close()
@@ -1101,7 +1101,7 @@ func TestRaft_ApplyNonLeader(t *testing.T) {
 	}
 }
 
-func TestRaft_ApplyConcurrent(t *testing.T) {
+func TestRaft_DONE_ApplyConcurrent(t *testing.T) {
 	// Make the cluster
 	conf := inmemConfig(t)
 	conf.HeartbeatTimeout = 2 * conf.HeartbeatTimeout
@@ -1989,7 +1989,7 @@ func TestRaft_ReJoinFollower(t *testing.T) {
 	}
 }
 
-func TestRaft_LeaderLeaseExpire(t *testing.T) {
+func TestRaft_DONE_LeaderLeaseExpire(t *testing.T) {
 	// Make a cluster
 	conf := inmemConfig(t)
 	c := MakeCluster(2, t, conf)
@@ -2052,7 +2052,7 @@ func TestRaft_LeaderLeaseExpire(t *testing.T) {
 	}
 }
 
-func TestRaft_Barrier(t *testing.T) {
+func TestRaft_DONE_Barrier(t *testing.T) {
 	// Make the cluster
 	c := MakeCluster(3, t, nil)
 	defer c.Close()
@@ -2254,7 +2254,7 @@ func TestRaft_NotifyCh(t *testing.T) {
 	}
 }
 
-func TestRaft_Voting(t *testing.T) {
+func TestRaft_DONE_Voting(t *testing.T) {
 	c := MakeCluster(3, t, nil)
 	defer c.Close()
 	followers := c.Followers()
